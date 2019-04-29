@@ -1,6 +1,7 @@
 <template lang="pug">
 	#app
 		app-header
+		navigation
 		router-view
 		app-footer
 </template>
@@ -12,10 +13,11 @@
 <script>
 	import AppHeader from "./components/AppHeader";
 	import AppFooter from "./components/AppFooter";
+	import Navigation from "./components/navigation";
 
 	export default {
-		components: {AppFooter, AppHeader},
-		mounted() {
+		components: {Navigation, AppFooter, AppHeader},
+		beforeCreate() {
 			this.$store.dispatch('loadData')
 		}
 	}

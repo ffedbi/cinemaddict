@@ -2,12 +2,17 @@
 	footer.footer
 		section.footer__logo.logo.logo--smaller Moowle
 		section.footer__statistics
-			p 20 movies inside
+			p {{ getNumMovies }} movies inside
 </template>
 
 <script>
 	export default {
-		name: "AppFooter"
+		name: "AppFooter",
+		computed: {
+			getNumMovies() {
+				return this.$store.getters.movies.length;
+			}
+		}
 	};
 </script>
 
