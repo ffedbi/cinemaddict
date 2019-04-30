@@ -9,20 +9,21 @@
 		img(:src="filmData['film_info'].poster" :alt="filmData.film_info.title").film-card__poster
 		p.film-card__description {{ filmData['film_info'].description }}
 		button(v-if="filmData.comments" type="button" @click="openPopup(filmData)").film-card__comments {{ filmData.comments.length }} comments
-		form(v-on:submit.prevent="").film-card__controls
+		form(v-if="filmGroup === 'extra'" v-on:submit.prevent="").film-card__controls
 			button(@click="onChangeTypeMovie" type="button" data-btn="watchlist" :class="filmData[`user_details`][`watchlist`] ? 'active-btn' : ''").film-card__controls-item.button.film-card__controls-item--add-to-watchlist Add to watchlist
 			button(@click="onChangeTypeMovie" type="button" data-btn="already_watched" :class="filmData[`user_details`][`already_watched`] ? 'active-btn' : ''").film-card__controls-item.button.film-card__controls-item--mark-as-watched Mark as watched
 			button(@click="onChangeTypeMovie" type="button" data-btn="favorite" :class="filmData[`user_details`][`favorite`] ? 'active-btn' : ''").film-card__controls-item.button.film-card__controls-item--favorite Mark as favorite
 </template>
 
 <script>
-	import moment from 'moment'
-
 	export default {
 		name: "film-card",
 		props: {
 			filmData: {
 				type: Object,
+			},
+			filmGroup: {
+				type: String
 			}
 		},
 		methods: {
@@ -42,8 +43,9 @@
 			},
 			getDuration() {
 				const time = this.filmData['film_info'].runtime;
-				const hours = moment(time).hours();
-				return `${hours}H M`
+				const hours = Math.floor(time / 60);
+				const minutes = time % 60;
+				return `${hours}:${minutes}`
 			},
 		},
 	}

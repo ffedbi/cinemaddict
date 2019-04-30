@@ -31,7 +31,7 @@
 								td.film-details__cell {{ getReleaseDate }}
 							tr.film-details__row
 								td.film-details__term Runtime
-								td.film-details__cell {{ movie.runtime }} min
+								td.film-details__cell {{ movie.film_info.runtime }} min
 							tr.film-details__row
 								td.film-details__term Country
 								td.film-details__cell {{ movie.film_info.release.release_country }}
@@ -47,7 +47,7 @@
 				input(type="checkbox" @change="changeTypeMovies" name="favorite" id="favorite" :checked="movie[`user_details`][`favorite`] ? true : false").film-details__control-input.visually-hidden
 				label(for="favorite").film-details__control-label.film-details__control-label--favorite Add to favorites
 			section.film-details__comments-wrap
-				comments(:comments="movie.comments")
+				comments(:comments="getComments")
 				.film-details__new-comment
 					div
 						label(for="add-emoji").film-details__add-emoji-label 😐
@@ -62,9 +62,9 @@
 					label.film-details__comment-label
 						textarea(placeholder="← Select reaction, add comment here" name="comment" v-on:keyup.ctrl.enter="addComments").film-details__comment-input
 			section.film-details__user-rating-wrap
-				.film-details__user-rating-controls
-					span.film-details__watched-status.film-details__watched-status--active already watched
-					button(type="button").film-details__watched-reset undo
+				div(v-if="showBtnRemove").film-details__user-rating-controls
+					span.film-details__watched-status {{ showTextRemoveComment ? textCommentDelActions : 'already watched'}}
+					button(v-if="showBtnRemove" type="button" @click="removeComment").film-details__watched-reset undo
 				.film-details__user-score
 					.film-details__user-rating-poster
 						img(:src="movie.film_info.poster" :alt="movie.film_info.title").film-details__user-rating-img
@@ -88,6 +88,9 @@
 				showEmojiList: false,
 				activeEmoji: `😐`,
 				emojiList: [`😐`, `😴`, '😀'],
+				showBtnRemove: false,
+				showTextRemoveComment: false,
+				textCommentDelActions: 'Comment deleted'
 			}
 		},
 		methods: {
@@ -107,10 +110,19 @@
 					date: Date.now(),
 					emotion: `neutral-face`
 				};
-				this.$store.commit('changeCommentsList', newComment)
+				this.$store.commit('changeCommentsList', newComment);
+				this.showBtnRemove = true;
+				e.target.value = '';
+			},
+			removeComment() {
+				this.$store.commit('removeComment', this.movie.id);
+				this.showBtnRemove = false;
 			}
 		},
 		computed: {
+			getComments() {
+				return this.$store.getters.popupData.comments;
+			},
 			getActors() {
 				return this.movie.film_info.actors.join(',')
 			},
@@ -121,7 +133,7 @@
 				return this.movie.film_info.genre.join(' ')
 			},
 			getReleaseDate() {
-				return moment(this.movie.film_info.release.date).format('HH MMMM YYYY')
+				return moment(this.movie.film_info.release.date).format('DD MMMM YYYY')
 			}
 		}
 	}

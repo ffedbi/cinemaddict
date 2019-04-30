@@ -23,7 +23,7 @@ export default new Vuex.Store({
 	getters: {
 		movies: state => state.movies,
 		popupShow: state => state.popupShow,
-		popupData: state => state.popupData
+		popupData: state => state.popupData,
 	},
 	mutations: {
 		updateMovies(state, payload) {
@@ -48,7 +48,11 @@ export default new Vuex.Store({
 		},
 		changeCommentsList(state, payload) {
 			state.popupData.comments.push(payload)
-		}
+		},
+		removeComment(state, id) {
+			state.movies[id].comments.length = state.movies[id].comments.length - 1;
+			state.popupData.comments.length = state.popupData.comments.length - 1;
+		},
 	},
 	actions: {
 		loadData({commit}) {
@@ -59,6 +63,9 @@ export default new Vuex.Store({
 			.catch(() => {
 				this.state.errorLoad = true;
 			})
+		},
+		searchMovies({commit}, payload) {
+			commit('changeRenderMovies', payload)
 		}
 	}
 });

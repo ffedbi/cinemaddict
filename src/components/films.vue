@@ -3,7 +3,7 @@
 		section.films-list
 			h2.films-list__title.visually-hidden All movies. Upcoming
 			.films-list__container
-				film-card(v-for="(item, index) in getStartMovies" :film-data="item" :key="index")
+				film-card(v-for="(item, index) in getStartMovies" :film-data="item" film-group="extra" :key="index")
 			button(v-if="showBtnMore" type="button" @click="onClickBtnMore").films-list__show-more Show more
 		section.films-list--extra
 			h2.films-list__title Top rated
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-	import {mapState} from 'vuex';
+	import {mapGetters} from 'vuex';
 	import FilmCard from "./film-card";
 
 	export default {
@@ -39,7 +39,9 @@
 			}
 		},
 		computed: {
-			...mapState(['movies']),
+			...mapGetters([
+				'movies'
+			]),
 			getStartMovies() {
 				const startStep = 0;
 				return this.movies.slice(startStep, this.counter);

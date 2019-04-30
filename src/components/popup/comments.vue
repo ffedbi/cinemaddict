@@ -1,7 +1,7 @@
 <template lang="pug">
 	div
 		h3.film-details__comments-title Comments
-		span.film-details__comments-count {{ comments.length }}
+			span.film-details__comments-count  {{ comments.length }}
 		ul.film-details__comments-list
 			li(v-for="(comment, index) in comments" :key="index").film-details__comment
 				span.film-details__comment-emoji {{ getEmoji(comment[`emotion`]) }}
@@ -28,10 +28,10 @@
 				type: Array
 			}
 		},
+		data() {
+			return {}
+		},
 		methods: {
-			getDateComment(date) {
-				return date;
-			},
 			getEmoji(value) {
 				return emojiList[value]
 			},
@@ -39,6 +39,9 @@
 				const dateNow = Date.now();
 				const res = moment(dateNow - time).day();
 				return res === 0 ? 'yesterday' : `${res} days ago`
+			},
+			removeComment(id) {
+
 			}
 		}
 	}

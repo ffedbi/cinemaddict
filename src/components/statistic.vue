@@ -1,7 +1,7 @@
 <template lang="pug">
 	section.statistic
 		p.statistic__rank You rank
-			span.statistic__rank-label Fan
+			span.statistic__rank-label  Fan
 		form.statistic__filters
 			p.statistic__filters-description Show stats:
 			input(type="radio" name="statistic-filter" id="statistic-all-time" value="all-time" checked).statistic__filters-input.visually-hidden
@@ -21,41 +21,39 @@
 					span.statistic__item-description movies
 			li.statistic__text-item
 				h4.statistic__item-title Total duration
-				p.statistic__item-text {{ getTotalDuration }}
-					//| 41
-					//span.statistic__item-description h
-					//| 8
-					//span.statistic__item-description m
-					|
+				p.statistic__item-text
+					| {{ duration.hours }}
+					span.statistic__item-description h
+					| {{ duration.minute }}
+					span.statistic__item-description m
 			li.statistic__text-item
 				h4.statistic__item-title Top genre
-				p.statistic__item-text {{getTopGanre || `Action`}}
+				p.statistic__item-text {{ getTopGanre.labels[0]}}
 		.statistic__chart-wrap
-			.chartjs-size-monitor
-				.chartjs-size-monitor-expand
-				canvas(width="1000" height="450").statistic__chart.chartjs-render-monitor
+			line-chart(:chartData="getTopGanre")
 </template>
 
 <script>
 	import {mapGetters} from 'vuex';
+	import LineChart from "./line-chart";
 
 	export default {
 		name: "statistic",
+		components: {
+			LineChart
+		},
 		data() {
-			return {}
+			return {
+				duration: {
+					hours: 0,
+					minute: 0
+				}
+			}
 		},
 		computed: {
 			...mapGetters([
 				'movies'
 			]),
-			getTotalDuration() {
-				let res = 0;
-				for (let movie of this.movies) {
-					res += movie['film_info'].runtime
-				}
-				// console.log(res);
-				return res
-			},
 			getTopGanre() {
 				let arr = [];
 				let res = {};
@@ -63,13 +61,24 @@
 
 				for (let item of arr) {
 					if (!res[item]) {
-						res[item] = 0
+						res[item] = 0;
 					}
-					res[item]++
+					res[item]++;
 				}
-
-				console.log(res)
+				return {
+					labels: Object.keys(res),
+					values: Object.values(res)
+				}
 			}
+		},
+		created() {
+			let duration = 0;
+			for (let movie of this.movies) {
+				duration += movie['film_info'].runtime
+			}
+
+			this.duration.hours = Math.floor(duration / 60);
+			this.duration.minute = duration % 60;
 		}
 	}
 </script>
