@@ -48,7 +48,7 @@
 			},
 			getTopRatedMovies() {
 				let arrMovies = this.movies.slice();
-				return arrMovies.sort((a, b) => b.film_info.total_rating - a.film_info.total_rating).slice(0, 2)
+				return arrMovies.sort((a, b) => b.info.rating - a.info.rating).slice(0, 2)
 			},
 			getMaxCommentMovies() {
 				let arrMovies = this.movies.slice();
