@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from 'axios'
+import Move from "./assets/js/model-move";
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
 		openBlock: 'films',
 		movies: [],
 		moviesGroup: {},
+		favoriteList: [],
 		errorLoad: false,
 		popupShow: false,
 		popupData: null
@@ -27,7 +29,19 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		updateMovies(state, payload) {
-			state.movies = payload;
+			const movies = [];
+			for (let item of payload) {
+				movies.push(new Move(item))
+			}
+			state.movies = movies;
+		},
+		updateMoviesGroup(state, payload) {
+			console.log('up')
+			state.moviesGroup = {
+				favorite: payload.filter((it) => it.userDetails.favorite),
+				watchList: payload.filter((it) => it.userDetails.watchlist),
+				history: payload.filter((it) => it.userDetails.alreadyWatched)
+			}
 		},
 		closePopup(state) {
 			state.popupShow = false;

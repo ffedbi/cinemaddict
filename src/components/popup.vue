@@ -5,21 +5,21 @@
 				button(type="button" @click="closePopup").film-details__close-btn
 			.film-details__info-wrap
 				.film-details__poster
-					img(:src="movie.film_info.poster" :alt="movie.film_info.title").film-details__poster-img
-					p.film-details__age {{ movie.film_info.age_rating }} +
+					img(:src="movie.info.img" :alt="movie.info.title").film-details__poster-img
+					p.film-details__age {{ movie.info.ageRating }} +
 				.film-details__info
 					.film-details__info-head
 						.film-details__title-wrap
-							h3.film-details__title {{ movie.film_info.title }}
-							p.film-details__title-original Original: {{ movie.film_info.alternative_title }}
+							h3.film-details__title {{ movie.info.title }}
+							p.film-details__title-original Original: {{ movie.info.alternativeTitle }}
 						.film-details__rating
-							p.film-details__total-rating {{ movie.film_info.total_rating }}
-							p.film-details__user-rating Your rate {{ movie.user_details.personal_rating }}
+							p.film-details__total-rating {{ movie.info.rating }}
+							p.film-details__user-rating Your rate {{ movie.userDetails.userRating }}
 					table.film-details__table
 						tbody
 							tr.film-details__row
 								td.film-details__term Director
-								td.film-details__cell {{ movie.film_info.director }}
+								td.film-details__cell {{ movie.info.director }}
 							tr.film-details__row
 								td.film-details__term Writers
 								td.film-details__cell {{ getWriters }}
@@ -31,20 +31,20 @@
 								td.film-details__cell {{ getReleaseDate }}
 							tr.film-details__row
 								td.film-details__term Runtime
-								td.film-details__cell {{ movie.film_info.runtime }} min
+								td.film-details__cell {{ movie.info.runtime }} min
 							tr.film-details__row
 								td.film-details__term Country
-								td.film-details__cell {{ movie.film_info.release.release_country }}
+								td.film-details__cell {{ movie.info.release.country }}
 							tr.film-details__row
 								td.film-details__term Genres
 								td.film-details__cell {{ getGenres }}
-					p.film-details__film-description {{ movie.film_info.description }}
+					p.film-details__film-description {{ movie.info.description }}
 			section.film-details__controls
-				input(type="checkbox" @change="changeTypeMovies" name="watchlist" id="watchlist" :checked="movie[`user_details`][`watchlist`] ? true : false").film-details__control-input.visually-hidden
-				label(for="watchlist").film-details__control-label.film-details__control-label--watchlist Add to watchlist
-				input(type="checkbox" @change="changeTypeMovies" name="already_watched" id="already_watched" :checked="movie[`user_details`][`already_watched`] ? true : false").film-details__control-input.visually-hidden
-				label(for="already_watched").film-details__control-label.film-details__control-label--watched Already watched
-				input(type="checkbox" @change="changeTypeMovies" name="favorite" id="favorite" :checked="movie[`user_details`][`favorite`] ? true : false").film-details__control-input.visually-hidden
+				input(type="checkbox" @change="changeTypeMovies" name="watchList" id="watchList" :checked="movie.userDetails.watchList ? true : false").film-details__control-input.visually-hidden
+				label(for="watchList").film-details__control-label.film-details__control-label--watchlist Add to watchlist
+				input(type="checkbox" @change="changeTypeMovies" name="alreadyWatched" id="alreadyWatched" :checked="movie.userDetails.alreadyWatched ? true : false").film-details__control-input.visually-hidden
+				label(for="alreadyWatched").film-details__control-label.film-details__control-label--watched Already watched
+				input(type="checkbox" @change="changeTypeMovies" name="favorite" id="favorite" :checked="movie.userDetails.favorite ? true : false").film-details__control-input.visually-hidden
 				label(for="favorite").film-details__control-label.film-details__control-label--favorite Add to favorites
 			section.film-details__comments-wrap
 				comments(:comments="getComments")
@@ -67,7 +67,7 @@
 					button(v-if="showBtnRemove" type="button" @click="removeComment").film-details__watched-reset undo
 				.film-details__user-score
 					.film-details__user-rating-poster
-						img(:src="movie.film_info.poster" :alt="movie.film_info.title").film-details__user-rating-img
+						img(:src="movie.info.img" :alt="movie.info.title").film-details__user-rating-img
 					section.film-details__user-rating-inner
 						h3.film-details__user-rating-title A Man On The Wall
 						p.film-details__user-rating-feelings How you feel it?
@@ -100,7 +100,7 @@
 			changeTypeMovies(e) {
 				const value = e.target.name;
 				let newData = this.movie;
-				newData.user_details[value] = !newData.user_details[value];
+				newData.userDetails[value] = !newData.userDetails[value];
 				this.$store.commit('changeMovie', newData);
 			},
 			addComments(e) {
@@ -124,16 +124,16 @@
 				return this.$store.getters.popupData.comments;
 			},
 			getActors() {
-				return this.movie.film_info.actors.join(',')
+				return this.movie.info.actors.join(', ')
 			},
 			getWriters() {
-				return this.movie.film_info.writers.join(',')
+				return this.movie.info.writers.join(', ')
 			},
 			getGenres() {
-				return this.movie.film_info.genre.join(' ')
+				return this.movie.info.genre.join(', ')
 			},
 			getReleaseDate() {
-				return moment(this.movie.film_info.release.date).format('DD MMMM YYYY')
+				return moment(this.movie.info.release.date).format('DD MMMM YYYY')
 			}
 		}
 	}
