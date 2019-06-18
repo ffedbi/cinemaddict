@@ -28,9 +28,9 @@
 					span.statistic__item-description m
 			li.statistic__text-item
 				h4.statistic__item-title Top genre
-				p.statistic__item-text {{ getTopGenre }}
+				p.statistic__item-text {{ topGengre }}
 		.statistic__chart-wrap
-			line-chart(:chartData="getTopGenre")
+			line-chart(:chartData="getChartData")
 </template>
 
 <script>
@@ -47,14 +47,15 @@
 				duration: {
 					hours: 0,
 					minute: 0
-				}
+				},
+				topGengre: '',
 			}
 		},
 		computed: {
 			...mapGetters([
 				'movies'
 			]),
-			getTopGenre() {
+			getChartData() {
 				let arr = [];
 				let res = {};
 				this.movies.forEach((it) => arr.push(...it.info.genre));
@@ -66,9 +67,11 @@
 					res[item]++;
 				}
 
-				console.log(res);
+				const labels = Object.keys(res);
+				const values = Object.values(res);
+				this.topGengre = labels[Math.max(...values) - 1];
 
-				return Object.keys(res)[Math.max(...Object.values(res))];
+				return {labels, values}
 			}
 		},
 		created() {

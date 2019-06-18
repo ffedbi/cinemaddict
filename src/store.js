@@ -16,11 +16,13 @@ export default new Vuex.Store({
 	state: {
 		openBlock: 'films',
 		movies: [],
-		moviesGroup: {},
-		favoriteList: [],
 		errorLoad: false,
 		popupShow: false,
-		popupData: null
+		popupData: null,
+
+		favoriteList: [],
+		watchList: [],
+		history: []
 	},
 	getters: {
 		movies: state => state.movies,
@@ -36,7 +38,6 @@ export default new Vuex.Store({
 			state.movies = movies;
 		},
 		updateMoviesGroup(state, payload) {
-			console.log('up')
 			state.moviesGroup = {
 				favorite: payload.filter((it) => it.userDetails.favorite),
 				watchList: payload.filter((it) => it.userDetails.watchlist),
