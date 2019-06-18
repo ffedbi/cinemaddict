@@ -21,7 +21,7 @@
 		},
 		computed: {
 			currentRating() {
-				return this.$store.getters.popupData.user_details.personal_rating;
+				return this.$store.getters.popupData.userDetails.rating;
 			}
 		}
 	}

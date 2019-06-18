@@ -28,9 +28,9 @@
 					span.statistic__item-description m
 			li.statistic__text-item
 				h4.statistic__item-title Top genre
-				p.statistic__item-text {{ getTopGanre.labels[0]}}
+				p.statistic__item-text {{ topGengre }}
 		.statistic__chart-wrap
-			line-chart(:chartData="getTopGanre")
+			line-chart(:chartData="getChartData")
 </template>
 
 <script>
@@ -47,17 +47,18 @@
 				duration: {
 					hours: 0,
 					minute: 0
-				}
+				},
+				topGengre: '',
 			}
 		},
 		computed: {
 			...mapGetters([
 				'movies'
 			]),
-			getTopGanre() {
+			getChartData() {
 				let arr = [];
 				let res = {};
-				this.movies.forEach((it) => arr.push(...it['film_info'].genre));
+				this.movies.forEach((it) => arr.push(...it.info.genre));
 
 				for (let item of arr) {
 					if (!res[item]) {
@@ -65,16 +66,18 @@
 					}
 					res[item]++;
 				}
-				return {
-					labels: Object.keys(res),
-					values: Object.values(res)
-				}
+
+				const labels = Object.keys(res);
+				const values = Object.values(res);
+				this.topGengre = labels[Math.max(...values) - 1];
+
+				return {labels, values}
 			}
 		},
 		created() {
 			let duration = 0;
 			for (let movie of this.movies) {
-				duration += movie['film_info'].runtime
+				duration += movie.info.runtime
 			}
 
 			this.duration.hours = Math.floor(duration / 60);

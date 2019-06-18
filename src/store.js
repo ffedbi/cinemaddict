@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from 'axios'
+import Movie from "./assets/js/model-movie";
 
 Vue.use(Vuex);
 
@@ -15,10 +16,13 @@ export default new Vuex.Store({
 	state: {
 		openBlock: 'films',
 		movies: [],
-		moviesGroup: {},
 		errorLoad: false,
 		popupShow: false,
-		popupData: null
+		popupData: null,
+
+		favoriteList: [],
+		watchList: [],
+		historyList: []
 	},
 	getters: {
 		movies: state => state.movies,
@@ -27,7 +31,16 @@ export default new Vuex.Store({
 	},
 	mutations: {
 		updateMovies(state, payload) {
-			state.movies = payload;
+			const movies = [];
+			for (let item of payload) {
+				movies.push(new Movie(item))
+			}
+			state.movies = movies;
+		},
+		updateMoviesGroup(state) {
+			state.favoriteList = state.movies.filter((it) => it.userDetails.favorite);
+			state.watchList = state.movies.filter((it) => it.userDetails.watchList);
+			state.historyList = state.movies.filter((it) => it.userDetails.alreadyWatched)
 		},
 		closePopup(state) {
 			state.popupShow = false;
@@ -59,6 +72,7 @@ export default new Vuex.Store({
 			axios.get(url, axiosConfig)
 			.then((response) => {
 				commit('updateMovies', response.data);
+				commit('updateMoviesGroup', response.data);
 			})
 			.catch(() => {
 				this.state.errorLoad = true;
