@@ -27,7 +27,6 @@ export default class Movie {
 		};
 		this.comments = [...data['comments']]
 	}
-
 	toRAW() {
 		return {
 			'id': this.id,
@@ -58,11 +57,12 @@ export default class Movie {
 		}
 	}
 
-	static parseMove(data) {
+	static parseMovie(data) {
 		return new Movie(data)
 	}
 
 	static parseMovies(data) {
-		return data.map(Movie.parseMove())
+		return data.map(Movie.parseMovie())
 	}
 }
+
