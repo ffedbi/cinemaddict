@@ -10,9 +10,9 @@
 		p.film-card__description {{ filmData.description }}
 		button(v-if="filmData.comments" type="button" @click="openPopup(filmData)").film-card__comments {{ filmData.comments.length }} comments
 		form(v-if="filmGroup === 'extra'" v-on:submit.prevent="").film-card__controls
-			button(@click="onChangeTypeMovie" type="button" data-btn="watchList" :class="filmData.userDetails.watchList ? 'active-btn' : ''").film-card__controls-item.button.film-card__controls-item--add-to-watchlist Add to watchlist
-			button(@click="onChangeTypeMovie" type="button" data-btn="alreadyWatched" :class="filmData.userDetails.alreadyWatched ? 'active-btn' : ''").film-card__controls-item.button.film-card__controls-item--mark-as-watched Mark as watched
-			button(@click="onChangeTypeMovie" type="button" data-btn="favorite" :class="filmData.userDetails.favorite ? 'active-btn' : ''").film-card__controls-item.button.film-card__controls-item--favorite Mark as favorite
+			button(@click="onChangeTypeMovie" type="button" data-btn="watchList" :class="filmData.userDetails.watchList ? 'active-btn' : ''").film-card__controls-item.film-card__controls-item--add-to-watchlist Add to watchlist
+			button(@click="onChangeTypeMovie" type="button" data-btn="alreadyWatched" :class="filmData.userDetails.alreadyWatched ? 'active-btn' : ''").film-card__controls-item.film-card__controls-item--mark-as-watched Mark as watched
+			button(@click="onChangeTypeMovie" type="button" data-btn="favoriteList" :class="filmData.userDetails.favoriteList ? 'active-btn' : ''").film-card__controls-item.film-card__controls-item--favorite Mark as favorite
 </template>
 
 <script>
@@ -33,8 +33,13 @@
 			onChangeTypeMovie(e) {
 				const value = e.target.dataset.btn;
 				let newData = this.filmData;
+				console.log(newData.userDetails)
 				newData.userDetails[value] = !newData.userDetails[value];
 				this.$store.commit('changeMovie', newData);
+				if (value !== 'alreadyWatched') {
+					newData.userDetails[value] ? this.$store.state[value].push(newData) :
+						this.$store.state[value].splice(this.$store.state[value].id, 1)
+				}
 			}
 		},
 		computed: {

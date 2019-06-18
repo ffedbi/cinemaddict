@@ -1,4 +1,4 @@
-export default class Move {
+export default class Movie {
 	constructor(data) {
 		this.id = data.id;
 		this.info = {
@@ -59,10 +59,10 @@ export default class Move {
 	}
 
 	static parseMove(data) {
-		return new Move(data)
+		return new Movie(data)
 	}
 
 	static parseMovies(data) {
-		return data.map(Move.parseMove())
+		return data.map(Movie.parseMove())
 	}
 }
